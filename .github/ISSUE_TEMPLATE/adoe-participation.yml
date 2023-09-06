@@ -30,7 +30,7 @@ body:
     id: philosophy
     attributes:
       label: Icebreaker?
-      description: Spaghetti is a:
+      description: Spaghetti is a
       options:
         - Soup
         - Salad
