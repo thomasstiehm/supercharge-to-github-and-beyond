@@ -1,4 +1,4 @@
-# This workflow will be what we use to prevent attendees from setting their favorite number as 69. 
+# This workflow will be what we use to prevent attendees from setting their favorite number as 69 or anything that isn't a number. 
 # Even in a professional setting you never know when someone is going to be cheeky and rather than deal with that directly it 
 #  seems more appropriate to show off how you can use workflows to handle a sitation like this. 
 # Not necessarily practical but shows a lot of different parts of actions and workflows.
