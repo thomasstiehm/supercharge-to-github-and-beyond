@@ -1,0 +1,48 @@
+name: ADOE 2023 Attendee Participation
+description: Teaches you about GitHub issues and forms + enables your participation in the later labs
+title: "Please enter your name (make sure you delete all this text first)"
+# labels: ["bug", "triage"]
+projects: ["Coveros/16"]
+# assignees:
+#   - coveros-phil
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Get a feel for how issue creation can work! Whether it be using default issues, issue creation through projects, or using issue forms (fun fact: that's what this is) GitHub has options to suit your needs.
+        \n
+        Another fun fact: You'll see some interesting things later on based on your answers here...
+  - type: textarea
+    id: learning-objective
+    attributes:
+      label: Learning Objective
+      description: What are you most interested in learning about today?
+      placeholder: Workflows!
+  - type: input
+    id: fav_number
+    attributes:
+      label: Favorite Number
+      description: What is your favorite number?
+      placeholder: ex. 45
+    validations:
+      required: true
+  - type: dropdown
+    id: philosophy
+    attributes:
+      label: Icebreaker?
+      description: Spaghetti is a:
+      options:
+        - Soup
+        - Salad
+        - Sandwich
+      default: 0
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Terms of Participation
+      description: By submitting this issue, you agree to be engaged for the WHOLE DAY
+      options:
+        - label: I agree to participate for THE WHOLE DAY
+          required: true
