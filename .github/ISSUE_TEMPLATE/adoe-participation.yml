@@ -1,10 +1,7 @@
 name: ADOE 2023 Attendee Participation
 description: Teaches you about GitHub issues and forms + enables your participation in the later labs
 title: "Please enter your name (make sure you delete all this text first)"
-# labels: ["bug", "triage"]
 projects: ["Coveros/16"]
-# assignees:
-#   - coveros-phil
 body:
   - type: markdown
     attributes:
@@ -29,8 +26,8 @@ body:
   - type: dropdown
     id: philosophy
     attributes:
-      label: Icebreaker?
-      description: Spaghetti is a
+    label: Spaghetti is a
+      description: Icebreaker?
       options:
         - Soup
         - Salad
