@@ -1,6 +1,6 @@
 # This will enforce that all attendees create the issue in the way we want
 
-blank_issues_enabled: false
+# blank_issues_enabled: false
 contact_links:
   - name: GitHub Issue Forms
     url: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
