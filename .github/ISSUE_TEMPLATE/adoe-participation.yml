@@ -10,7 +10,7 @@ body:
     attributes:
       value: |
         Get a feel for how issue creation can work! Whether it be using default issues, issue creation through projects, or using issue forms (fun fact: that's what this is) GitHub has options to suit your needs.
-        \n
+        
         Another fun fact: You'll see some interesting things later on based on your answers here...
   - type: textarea
     id: learning-objective
