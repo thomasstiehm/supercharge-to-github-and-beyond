@@ -8,10 +8,13 @@ name: No No No
 on:
   issues:
     types: [opened, edited]
+  issue_comment:
+
+permissions: write-all
 
 jobs:
   Change-The-Input:
     runs-on: ubuntu
     steps:
       - name: Grab the issue modified
-        run: echo "Hi"
+        run: echo ${{ toJSON(github.event) }}
