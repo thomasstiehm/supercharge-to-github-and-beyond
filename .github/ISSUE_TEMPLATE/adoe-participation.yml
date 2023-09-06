@@ -42,4 +42,5 @@ body:
       description: By submitting this issue, you agree to be engaged for the WHOLE DAY
       options:
         - label: I agree to participate for THE WHOLE DAY
-          required: true
+    validations:
+      required: true
