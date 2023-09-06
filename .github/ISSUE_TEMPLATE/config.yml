@@ -1,3 +1,5 @@
+# This will enforce that all attendees create the issue in the way we want
+
 blank_issues_enabled: false
 contact_links:
   - name: GitHub Issue Forms
