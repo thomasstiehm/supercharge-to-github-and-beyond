@@ -17,4 +17,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Grab the issue modified
-        run: echo ${{ toJSON(github) }}
+        run: echo "Something"
