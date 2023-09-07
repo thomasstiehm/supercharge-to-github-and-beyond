@@ -7,6 +7,8 @@ body:
     attributes:
       value: |
         Get a feel for how issue creation can work! Whether it be using default issues, issue creation through projects, or using issue forms (fun fact: that's what this is) GitHub has options to suit your needs.
+
+        Once you have filled out the form there will be some additional fields to answer linked to the project.
         
         Another fun fact: You'll see some interesting things later on based on your answers here...
   - type: textarea
@@ -21,18 +23,6 @@ body:
       label: Favorite Number
       description: What is your favorite number?
       placeholder: ex. 45
-    validations:
-      required: true
-  - type: dropdown
-    id: philosophy
-    attributes:
-      label: Spaghetti is a
-      description: Icebreaker?
-      options:
-        - Soup
-        - Salad
-        - Sandwich
-      default: 0
     validations:
       required: true
   - type: checkboxes
