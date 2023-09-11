@@ -16,5 +16,7 @@ jobs:
   Change-The-Input:
     runs-on: ubuntu-latest
     steps:
-      - name: Grab the issue modified
-        run: echo "Something"
+      - name: Verify the favorite number input
+        uses: ./.github/actions/validate-favorite-number
+        with:
+          event_ctx: ${{ toJSON(github.event) }}
