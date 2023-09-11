@@ -20,5 +20,5 @@ jobs:
     
       - name: Verify the favorite number input
         uses: ./.github/actions/validate-favorite-number
-        with:
-          event_ctx: ${{ toJSON(github.event) }}
+        # with:
+        #   event_ctx: ${{ toJSON(github.event) }}

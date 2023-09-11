@@ -9675,11 +9675,9 @@ const github = __importStar(__nccwpck_require__(7130));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         core.debug("Starting validate-favorite-number action");
-        const eventJson = JSON.parse(core.getInput("event_ctx"));
-        core.info("Event parsed value: ");
-        core.info(JSON.stringify(eventJson.issue));
+        const event = github.context.payload;
         core.info("GitHub Content: ");
-        core.info(JSON.stringify(github.context.payload));
+        core.info(JSON.stringify(event));
     });
 }
 exports.run = run;
