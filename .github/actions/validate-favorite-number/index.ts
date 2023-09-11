@@ -11,7 +11,7 @@ export async function run() {
     core.info(eventJson);
     const event = JSON.parse(eventJson);
     core.info('Event parsed value: ');
-    core.info(event.issue);
+    core.info(JSON.stringify(event.issue));
 }
 
 
