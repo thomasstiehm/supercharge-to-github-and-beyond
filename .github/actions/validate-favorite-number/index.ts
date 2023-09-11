@@ -1,18 +1,16 @@
-import * as core from '@actions/core';
-import * as github from '@actions/github';
-
-
+import * as core from "@actions/core";
+import * as github from "@actions/github";
+import { IssuesEvent } from "@octokit/webhooks-definitions/schema";
 
 export async function run() {
-    core.debug('Starting validate-favorite-number action');
+    core.debug("Starting validate-favorite-number action");
 
-    const eventJson = core.getInput('event_ctx')
-    core.info('Event JSON value: ');
-    core.info(eventJson);
-    const event = JSON.parse(eventJson);
-    core.info('Event parsed value: ');
-    core.info(JSON.stringify(event.issue));
+    const eventJson = JSON.parse(core.getInput("event_ctx")) as IssuesEvent;
+    core.info("Event parsed value: ");
+    core.info(JSON.stringify(eventJson.issue));
+
+    core.info("GitHub Content: ");
+    core.info(github.context.payload.toString());
 }
-
 
 run();
