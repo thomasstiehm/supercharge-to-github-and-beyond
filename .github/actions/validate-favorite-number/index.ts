@@ -10,7 +10,7 @@ export async function run() {
     core.info(JSON.stringify(eventJson.issue));
 
     core.info("GitHub Content: ");
-    core.info(github.context.payload.toString());
+    core.info(JSON.stringify(github.context.payload));
 }
 
 run();

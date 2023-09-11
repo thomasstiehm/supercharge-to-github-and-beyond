@@ -9679,7 +9679,7 @@ function run() {
         core.info("Event parsed value: ");
         core.info(JSON.stringify(eventJson.issue));
         core.info("GitHub Content: ");
-        core.info(github.context.payload.toString());
+        core.info(JSON.stringify(github.context.payload));
     });
 }
 exports.run = run;
