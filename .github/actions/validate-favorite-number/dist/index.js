@@ -2770,7 +2770,7 @@ function run() {
         core.info(eventJson);
         const event = JSON.parse(eventJson);
         core.info('Event parsed value: ');
-        core.info(event);
+        core.info(event.issue);
     });
 }
 exports.run = run;
