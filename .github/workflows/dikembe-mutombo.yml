@@ -16,6 +16,8 @@ jobs:
   Change-The-Input:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4.0.0
+    
       - name: Verify the favorite number input
         uses: ./.github/actions/validate-favorite-number
         with:
