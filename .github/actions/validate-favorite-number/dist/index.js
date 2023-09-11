@@ -2765,6 +2765,12 @@ const core = __importStar(__nccwpck_require__(289));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         core.debug('Starting validate-favorite-number action');
+        const eventJson = core.getInput('event_ctx');
+        core.info('Event JSON value: ');
+        core.info(eventJson);
+        const event = JSON.parse(eventJson);
+        core.info('Event parsed value: ');
+        core.info(event);
     });
 }
 exports.run = run;
