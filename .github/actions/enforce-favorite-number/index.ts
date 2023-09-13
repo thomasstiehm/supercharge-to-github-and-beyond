@@ -22,7 +22,7 @@ export async function run() {
                     owner: event.repository.owner.login,
                     repo: event.repository.name,
                     issue_number: event.issue.number,
-                    body: issueBody.replace(favNumRegex, `### Favorite Number\n\n${favNum - 1}\n\n`),
+                    body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${favNum - 1}\n\n`),
                 });
                 core.debug(JSON.stringify(data));
             }
@@ -39,7 +39,7 @@ export async function run() {
                         owner: event.repository.owner.login,
                         repo: event.repository.name,
                         issue_number: event.issue.number,
-                        body: issueBody.replace(favNumRegex, `### Favorite Number\n\n${filteredFavNum - 1}\n\n`),
+                        body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${filteredFavNum - 1}\n\n`),
                     });
                     core.debug(JSON.stringify(data));
                 }
@@ -49,7 +49,7 @@ export async function run() {
                     owner: event.repository.owner.login,
                     repo: event.repository.name,
                     issue_number: event.issue.number,
-                    body: issueBody.replace(favNumRegex, `### Favorite Number\n\n-_-\n\n`),
+                    body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n-_-\n\n`),
                 });
                 core.debug(JSON.stringify(data));
             }
