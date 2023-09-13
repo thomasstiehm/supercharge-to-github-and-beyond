@@ -1,0 +1,11 @@
+name: "enforce-favorite-number"
+description: Make sure that the favorite number contains only digits and is not 69
+author: coveros-phil
+inputs:
+  token:
+    description: The GITHUB_TOKEN secret
+    required: true
+
+runs:
+  using: node16
+  main: "dist/index.js"

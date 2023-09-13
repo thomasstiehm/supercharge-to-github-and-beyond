@@ -19,6 +19,6 @@ jobs:
       - uses: actions/checkout@v4.0.0
     
       - name: Verify the favorite number input
-        uses: ./.github/actions/validate-favorite-number
-        # with:
-        #   event_ctx: ${{ toJSON(github.event) }}
+        uses: ./.github/actions/enforce-favorite-number
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

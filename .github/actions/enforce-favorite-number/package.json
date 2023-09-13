@@ -1,0 +1,19 @@
+{
+    "name": "enforce-favorite-number",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "ncc build index.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@actions/core": "^1.10.1",
+        "@actions/github": "^5.1.1",
+        "@octokit/graphql": "^7.0.1",
+        "@octokit/webhooks-definitions": "^3.67.3"
+    }
+}
