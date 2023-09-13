@@ -8,9 +8,7 @@ export async function run() {
         const event = github.context.payload as IssuesEvent;
         const token = core.getInput("token");
         const octokit = github.getOctokit(token);
-        core.info(`Event: ${JSON.stringify(event.issue.body)}`);
         const issueBody = event.issue.body.replace(/\r\n/g, "");
-        core.info(`Event: ${JSON.stringify(event.issue.body)}`);
 
         const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
         const matches = issueBody.match(favNumRegex);

@@ -9680,15 +9680,13 @@ function run() {
             const event = github.context.payload;
             const token = core.getInput("token");
             const octokit = github.getOctokit(token);
-            // core.info("GitHub Content: ");
-            // core.info(JSON.stringify(event));
             const issueBody = event.issue.body.replace(/\r\n/g, "");
-            // core.info(issueBody);
             const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
             const matches = issueBody.match(favNumRegex);
             const isValid = /^\d+$/.test((_a = matches[1]) === null || _a === void 0 ? void 0 : _a.trim());
             if (isValid) {
                 const favNum = parseInt((_b = matches[1]) === null || _b === void 0 ? void 0 : _b.trim());
+                core.info(`Favorite number is: ${favNum}`);
                 const wereTheyBad = favNum === 69;
                 if (wereTheyBad) {
                     // We need to update the favorite number to 68 in the actual issue.
@@ -9696,9 +9694,9 @@ function run() {
                         owner: event.repository.owner.login,
                         repo: event.repository.name,
                         issue_number: event.issue.number,
-                        body: issueBody.replace(favNumRegex, `### Favorite Number\n\n${favNum - 1}\n\n`),
+                        body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${favNum - 1}\n\n`),
                     });
-                    core.debug(JSON.stringify(data));
+                    core.info(JSON.stringify(data));
                 }
             }
             else {
@@ -9707,6 +9705,7 @@ function run() {
                 const hasNumbers = /\d/.test((_c = matches[1]) === null || _c === void 0 ? void 0 : _c.trim());
                 if (hasNumbers) {
                     const filteredFavNum = parseInt((_d = matches[1]) === null || _d === void 0 ? void 0 : _d.trim().replace(/\D/g, ""));
+                    core.info(`Filtered favorite number is: ${filteredFavNum}`);
                     const wereTheyBad = filteredFavNum === 69;
                     if (wereTheyBad) {
                         // We need to update the favorite number to 68 in the actual issue.
@@ -9714,9 +9713,9 @@ function run() {
                             owner: event.repository.owner.login,
                             repo: event.repository.name,
                             issue_number: event.issue.number,
-                            body: issueBody.replace(favNumRegex, `### Favorite Number\n\n${filteredFavNum - 1}\n\n`),
+                            body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${filteredFavNum - 1}\n\n`),
                         });
-                        core.debug(JSON.stringify(data));
+                        core.info(JSON.stringify(data));
                     }
                 }
                 else {
@@ -9725,9 +9724,9 @@ function run() {
                         owner: event.repository.owner.login,
                         repo: event.repository.name,
                         issue_number: event.issue.number,
-                        body: issueBody.replace(favNumRegex, `### Favorite Number\n\n-_-\n\n`),
+                        body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n-_-\n\n`),
                     });
-                    core.debug(JSON.stringify(data));
+                    core.info(JSON.stringify(data));
                 }
             }
         }
