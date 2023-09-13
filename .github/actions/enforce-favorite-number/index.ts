@@ -8,13 +8,16 @@ export async function run() {
         const event = github.context.payload as IssuesEvent;
         const token = core.getInput("token");
         const octokit = github.getOctokit(token);
+        core.info(`Event: ${JSON.stringify(event.issue.body)}`);
         const issueBody = event.issue.body.replace(/\r\n/g, "");
+        core.info(`Event: ${JSON.stringify(event.issue.body)}`);
 
         const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
         const matches = issueBody.match(favNumRegex);
         const isValid = /^\d+$/.test(matches![1]?.trim());
         if (isValid) {
             const favNum = parseInt(matches![1]?.trim());
+            core.info(`Favorite number is: ${favNum}`);
             const wereTheyBad = favNum === 69;
             if (wereTheyBad) {
                 // We need to update the favorite number to 68 in the actual issue.
@@ -24,7 +27,7 @@ export async function run() {
                     issue_number: event.issue.number,
                     body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${favNum - 1}\n\n`),
                 });
-                core.debug(JSON.stringify(data));
+                core.info(JSON.stringify(data));
             }
         } else {
             // They supplied something that has non-numbers in it so we are gonna just give them a different favorite number
@@ -32,6 +35,7 @@ export async function run() {
             const hasNumbers = /\d/.test(matches![1]?.trim());
             if (hasNumbers) {
                 const filteredFavNum = parseInt(matches![1]?.trim().replace(/\D/g, ""));
+                core.info(`Filtered favorite number is: ${filteredFavNum}`);
                 const wereTheyBad = filteredFavNum === 69;
                 if (wereTheyBad) {
                     // We need to update the favorite number to 68 in the actual issue.
@@ -41,7 +45,7 @@ export async function run() {
                         issue_number: event.issue.number,
                         body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${filteredFavNum - 1}\n\n`),
                     });
-                    core.debug(JSON.stringify(data));
+                    core.info(JSON.stringify(data));
                 }
             } else {
                 // Since there are no numbers in it at all we're gonna give them a apathetic face as a favorite number
@@ -51,7 +55,7 @@ export async function run() {
                     issue_number: event.issue.number,
                     body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n-_-\n\n`),
                 });
-                core.debug(JSON.stringify(data));
+                core.info(JSON.stringify(data));
             }
         }
     } catch (error) {
