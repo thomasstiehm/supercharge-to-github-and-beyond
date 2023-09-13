@@ -25,6 +25,7 @@ export async function run() {
                     issue_number: event.issue.number,
                     body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${favNum - 1}\n\n`),
                 });
+                core.info("Favorite number had to be updated due to being 69");
                 core.info(JSON.stringify(data));
             }
         } else {
@@ -43,6 +44,7 @@ export async function run() {
                         issue_number: event.issue.number,
                         body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${filteredFavNum - 1}\n\n`),
                     });
+                    core.info("Favorite number had to be updated due to being 69");
                     core.info(JSON.stringify(data));
                 }
             } else {
@@ -53,6 +55,7 @@ export async function run() {
                     issue_number: event.issue.number,
                     body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n-_-\n\n`),
                 });
+                core.info("Favorite number had to be updated due them not actually giving a number");
                 core.info(JSON.stringify(data));
             }
         }
