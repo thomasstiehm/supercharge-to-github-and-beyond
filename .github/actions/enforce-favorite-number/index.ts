@@ -18,7 +18,7 @@ export async function run() {
             core.info(`Favorite number is: ${favNum}`);
             const wereTheyBad = favNum === 69 || favNum === 420 || favNum === 69420 || favNum === 42069;
             if (wereTheyBad) {
-                // We need to update the favorite number to 68 in the actual issue.
+                // We need to update the favorite number to be one less than whatever it is in the actual issue.
                 const data = await octokit.rest.issues.update({
                     owner: event.repository.owner.login,
                     repo: event.repository.name,
@@ -37,7 +37,7 @@ export async function run() {
                 core.info(`Filtered favorite number is: ${filteredFavNum}`);
                 const wereTheyBad = filteredFavNum === 69 || filteredFavNum === 420 || filteredFavNum === 69420 || filteredFavNum === 42069;
                 if (wereTheyBad) {
-                    // We need to update the favorite number to 68 in the actual issue.
+                    // We need to update the favorite number to be one less than whatever it is in the actual issue.
                     const data = await octokit.rest.issues.update({
                         owner: event.repository.owner.login,
                         repo: event.repository.name,
