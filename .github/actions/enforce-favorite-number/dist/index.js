@@ -9687,7 +9687,7 @@ function run() {
             if (isValid) {
                 const favNum = parseInt((_b = matches[1]) === null || _b === void 0 ? void 0 : _b.trim());
                 core.info(`Favorite number is: ${favNum}`);
-                const wereTheyBad = favNum === 69;
+                const wereTheyBad = favNum === 69 || favNum === 420 || favNum === 69420 || favNum === 42069;
                 if (wereTheyBad) {
                     // We need to update the favorite number to 68 in the actual issue.
                     const data = yield octokit.rest.issues.update({
@@ -9707,7 +9707,7 @@ function run() {
                 if (hasNumbers) {
                     const filteredFavNum = parseInt((_d = matches[1]) === null || _d === void 0 ? void 0 : _d.trim().replace(/\D/g, ""));
                     core.info(`Filtered favorite number is: ${filteredFavNum}`);
-                    const wereTheyBad = filteredFavNum === 69;
+                    const wereTheyBad = filteredFavNum === 69 || filteredFavNum === 420 || filteredFavNum === 69420 || filteredFavNum === 42069;
                     if (wereTheyBad) {
                         // We need to update the favorite number to 68 in the actual issue.
                         const data = yield octokit.rest.issues.update({
