@@ -1,0 +1,11 @@
+name: "tell-me-a-joke"
+description: Ask all users who opened an issue at the beginning if they want to hear a joke
+author: coveros-phil
+inputs:
+  token:
+    description: The GITHUB_TOKEN secret
+    required: true
+
+runs:
+  using: node16
+  main: "dist/index.js"
