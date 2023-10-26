@@ -9673,7 +9673,7 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(6289));
 const github = __importStar(__nccwpck_require__(7130));
 function run() {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     return __awaiter(this, void 0, void 0, function* () {
         core.debug("Starting enforce-favorite-number action");
         try {
@@ -9681,15 +9681,20 @@ function run() {
             const token = core.getInput("token");
             const octokit = github.getOctokit(token);
             const issueBody = event.issue.body.replace(/\r\n/g, "");
+            // If the issue does not have the Icebreaker tag then we need to just ignore them
+            if ((_a = event.issue.labels) === null || _a === void 0 ? void 0 : _a.some((label) => label.name != "Icebreaker")) {
+                core.info("Issue that triggered the workflow does not have the Icebreaker tag. Skipping....");
+                return;
+            }
             const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
             const matches = issueBody.match(favNumRegex);
-            const isValid = /^\d+$/.test((_a = matches[1]) === null || _a === void 0 ? void 0 : _a.trim());
+            const isValid = /^\d+$/.test((_b = matches[1]) === null || _b === void 0 ? void 0 : _b.trim());
             if (isValid) {
-                const favNum = parseInt((_b = matches[1]) === null || _b === void 0 ? void 0 : _b.trim());
+                const favNum = parseInt((_c = matches[1]) === null || _c === void 0 ? void 0 : _c.trim());
                 core.info(`Favorite number is: ${favNum}`);
                 const wereTheyBad = favNum === 69 || favNum === 420 || favNum === 69420 || favNum === 42069;
                 if (wereTheyBad) {
-                    // We need to update the favorite number to 68 in the actual issue.
+                    // We need to update the favorite number to be one less than whatever it is in the actual issue.
                     const data = yield octokit.rest.issues.update({
                         owner: event.repository.owner.login,
                         repo: event.repository.name,
@@ -9703,22 +9708,23 @@ function run() {
             else {
                 // They supplied something that has non-numbers in it so we are gonna just give them a different favorite number
                 // First check to see if the input had any numbers in it, if so then just remove all the non-digits and use that
-                const hasNumbers = /\d/.test((_c = matches[1]) === null || _c === void 0 ? void 0 : _c.trim());
+                const hasNumbers = /\d/.test((_d = matches[1]) === null || _d === void 0 ? void 0 : _d.trim());
                 if (hasNumbers) {
-                    const filteredFavNum = parseInt((_d = matches[1]) === null || _d === void 0 ? void 0 : _d.trim().replace(/\D/g, ""));
+                    let filteredFavNum = parseInt((_e = matches[1]) === null || _e === void 0 ? void 0 : _e.trim().replace(/\D/g, ""));
                     core.info(`Filtered favorite number is: ${filteredFavNum}`);
                     const wereTheyBad = filteredFavNum === 69 || filteredFavNum === 420 || filteredFavNum === 69420 || filteredFavNum === 42069;
                     if (wereTheyBad) {
-                        // We need to update the favorite number to 68 in the actual issue.
-                        const data = yield octokit.rest.issues.update({
-                            owner: event.repository.owner.login,
-                            repo: event.repository.name,
-                            issue_number: event.issue.number,
-                            body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${filteredFavNum - 1}\n\n`),
-                        });
+                        // We need to update the favorite number to be one less than whatever it is in the actual issue.
+                        filteredFavNum--;
                         core.info("Favorite number had to be updated due to being 69");
-                        core.info(JSON.stringify(data));
                     }
+                    const data = yield octokit.rest.issues.update({
+                        owner: event.repository.owner.login,
+                        repo: event.repository.name,
+                        issue_number: event.issue.number,
+                        body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${filteredFavNum}\n\n`),
+                    });
+                    core.info(JSON.stringify(data));
                 }
                 else {
                     // Since there are no numbers in it at all we're gonna give them a apathetic face as a favorite number

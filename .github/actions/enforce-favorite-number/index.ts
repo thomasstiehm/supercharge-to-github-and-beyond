@@ -39,20 +39,21 @@ export async function run() {
             // First check to see if the input had any numbers in it, if so then just remove all the non-digits and use that
             const hasNumbers = /\d/.test(matches![1]?.trim());
             if (hasNumbers) {
-                const filteredFavNum = parseInt(matches![1]?.trim().replace(/\D/g, ""));
+                let filteredFavNum = parseInt(matches![1]?.trim().replace(/\D/g, ""));
                 core.info(`Filtered favorite number is: ${filteredFavNum}`);
                 const wereTheyBad = filteredFavNum === 69 || filteredFavNum === 420 || filteredFavNum === 69420 || filteredFavNum === 42069;
                 if (wereTheyBad) {
                     // We need to update the favorite number to be one less than whatever it is in the actual issue.
-                    const data = await octokit.rest.issues.update({
-                        owner: event.repository.owner.login,
-                        repo: event.repository.name,
-                        issue_number: event.issue.number,
-                        body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${filteredFavNum - 1}\n\n`),
-                    });
+                    filteredFavNum--;
                     core.info("Favorite number had to be updated due to being 69");
-                    core.info(JSON.stringify(data));
                 }
+                const data = await octokit.rest.issues.update({
+                    owner: event.repository.owner.login,
+                    repo: event.repository.name,
+                    issue_number: event.issue.number,
+                    body: event.issue.body.replace(favNumRegex, `### Favorite Number\n\n${filteredFavNum}\n\n`),
+                });
+                core.info(JSON.stringify(data));
             } else {
                 // Since there are no numbers in it at all we're gonna give them a apathetic face as a favorite number
                 const data = await octokit.rest.issues.update({
