@@ -9,6 +9,7 @@ class WebScraper {
         // Store the url in an instance variable named url
         this.url = url;
     }
+    /// Use the Labs fix tool here to show that it can 'usually' fix basic bugs, or sometimes more complicated bugs
 
     // Define an async method named scrape
     async scrape(): Promise<{ pageTitle: string; link: string }[]> {
