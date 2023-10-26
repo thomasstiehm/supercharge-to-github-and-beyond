@@ -10,6 +10,12 @@ export async function run() {
         const octokit = github.getOctokit(token);
         const issueBody = event.issue.body.replace(/\r\n/g, "");
 
+        // If the issue does not have the Icebreaker tag then we need to just ignore them
+        if (event.issue.labels?.some((label) => label.name != "Icebreaker")) {
+            core.info("Issue that triggered the workflow does not have the Icebreaker tag. Skipping....");
+            return;
+        }
+
         const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
         const matches = issueBody.match(favNumRegex);
         const isValid = /^\d+$/.test(matches![1]?.trim());
