@@ -3,6 +3,7 @@
 name: Do you like jokes?
 
 on:
+  issue_comment:
   workflow_dispatch:
 
 permissions: write-all
@@ -12,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.0.0
-    
+
       - name: Ask if they want to hear a joke
         uses: ./.github/actions/tell-me-a-joke
         with:

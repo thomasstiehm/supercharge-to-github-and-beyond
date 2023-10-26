@@ -32570,10 +32570,14 @@ function run() {
         try {
             const token = core.getInput("token");
             const octokit = github.getOctokit(token);
+            core.info(JSON.stringify(github.context));
             // Need to determine if the event is a workflow_dispatch event or a issues event
             // if (github.context.eventName === "workflow_dispatch") {
-            // const event = github.context.payload as WorkflowDispatchEvent;
-            core.info(JSON.stringify(github.context));
+            //     const wfEvent = github.context.payload as WorkflowDispatchEvent;
+            // } else if (github.context.eventName === "issue_comment") {
+            //     const icEvent = github.context.payload as IssueCommentEvent;
+            //     core.info(JSON.stringify(icEvent));
+            // }
             // // We need to grab all of the issues that are opened that have the tag 'Icebreaker' on them
             // const openedIssues = await octokit.rest.issues.listForRepo({
             //     owner: event.repository.owner.login,
