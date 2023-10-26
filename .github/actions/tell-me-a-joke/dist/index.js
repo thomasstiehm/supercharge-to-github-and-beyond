@@ -32587,7 +32587,7 @@ function run() {
                         owner: wfEvent.repository.owner.login,
                         repo: wfEvent.repository.name,
                         title: ` ${((_a = issue.user) === null || _a === void 0 ? void 0 : _a.name) || ((_b = issue.user) === null || _b === void 0 ? void 0 : _b.login)}: Do you want to hear a joke?`,
-                        tags: ["Jokes"],
+                        labels: ["Jokes"],
                         assignees: [((_c = issue.user) === null || _c === void 0 ? void 0 : _c.login) || ""],
                         body: "I heard you like jokes, so I made this issue to ask you if you want to hear one. If you do, just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and I'll leave you alone...",
                     });

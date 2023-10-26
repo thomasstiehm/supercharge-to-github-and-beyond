@@ -32,7 +32,7 @@ export async function run() {
                     owner: wfEvent.repository.owner.login,
                     repo: wfEvent.repository.name,
                     title: ` ${issue.user?.name || issue.user?.login}: Do you want to hear a joke?`,
-                    tags: ["Jokes"],
+                    labels: ["Jokes"],
                     assignees: [issue.user?.login || ""],
                     body: "I heard you like jokes, so I made this issue to ask you if you want to hear one. If you do, just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and I'll leave you alone...",
                 });
