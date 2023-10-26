@@ -48,7 +48,9 @@ export async function run() {
                     }
                 } else {
                     // They ended up with a -_- for the number for whatever reason so we can interact with them in yet another different way
-                    msg += ` That's not to say that we don't also follow the rules when filling out forms. Next time be sure to follow the prompts on the form when filling in the fields :smile:`;
+                    msg += ` That's not to say that we don't also follow the rules when filling out forms. Next time be sure to follow the prompts on the form when filling in the fields :smile:.
+                    
+                    Anyways if you'd like to hear a joke anyways just comment on this issue with 'Yes' and I'll tell you a joke. If you'd rather not hear one though just go ahead and close the issue. `;
                     labels.push("-_-");
                 }
 
@@ -66,6 +68,7 @@ export async function run() {
         } else if (github.context.eventName === "issue_comment") {
             const icEvent = github.context.payload as IssueCommentEvent;
             // // Loop through the issues returned and create a new issue that is assigned to each user asking them if they want to hear a joke
+            // If they are Too Spicy don't tell them a joke and instead do something else
             // for (const issue of openedIssues.data) {
             //     const matches = issue.body?.match(favNumRegex);
             //     const isValid = /^\d+$/.test(matches![1]?.trim());
@@ -101,7 +104,7 @@ export async function run() {
             // They attempted to close the issue, so we need to tell them a joke because they can't escape this
             // Also reopen the issue because we're not done with them yet
 
-            // And even further if they were a little Too Spicy we can mess with them even more
+            // And even further if they were a little Too Spicy or -_- we can mess with them even more
         }
     } catch (error) {
         core.setFailed(error.message);
