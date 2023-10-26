@@ -3,6 +3,8 @@
 name: Do you like jokes?
 
 on:
+  issues:
+    types: [closed]
   issue_comment:
   workflow_dispatch:
 

@@ -15,6 +15,8 @@ export async function run() {
     try {
         const token = core.getInput("token");
         const octokit = github.getOctokit(token);
+
+        core.info(JSON.stringify(github.context));
         // Need to determine if the event is a workflow_dispatch event or a issues event
         if (github.context.eventName === "workflow_dispatch") {
             const wfEvent = github.context.payload as WorkflowDispatchEvent;
