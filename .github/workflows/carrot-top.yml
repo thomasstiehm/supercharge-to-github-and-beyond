@@ -8,7 +8,7 @@ on:
 permissions: write-all
 
 jobs:
-  Change-The-Input:
+  Jokes-Are-Fun:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.0.0
