@@ -11,9 +11,12 @@ export async function run() {
 
         const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
         // We need to grab all of the issues that are opened that have the tag 'Icebreaker' on them
-
-        core.info(JSON.stringify(event));
-        // const openedIssues = await octokit.rest.issues.
+        const openedIssues = await octokit.rest.issues.listForRepo({
+            owner: event.repository.owner.login,
+            repo: event.repository.name,
+            labels: "Icebreaker",
+        });
+        core.info(JSON.stringify(openedIssues));
 
         // const data = await octokit.rest.issues.update({
         //     owner: event.repository.owner.login,
