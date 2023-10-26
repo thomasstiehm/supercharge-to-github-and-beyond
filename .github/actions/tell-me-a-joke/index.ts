@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
-import { IssueCommentEvent, WorkflowDispatchEvent } from "@octokit/webhooks-definitions/schema";
+import { IssueCommentEvent, IssuesEvent, WorkflowDispatchEvent } from "@octokit/webhooks-definitions/schema";
 
 enum JokeType {
     "Zero" = "Infinity Joke",
@@ -32,6 +32,7 @@ export async function run() {
                     owner: wfEvent.repository.owner.login,
                     repo: wfEvent.repository.name,
                     title: ` ${issue.user?.name || issue.user?.login}: Do you want to hear a joke?`,
+                    tags: ["Jokes"],
                     assignees: [issue.user?.login || ""],
                     body: "I heard you like jokes, so I made this issue to ask you if you want to hear one. If you do, just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and I'll leave you alone...",
                 });
@@ -72,6 +73,11 @@ export async function run() {
 
             //     // core.info(`Created issue for user ${issue.user.login}`);
             // }
+        } else if (github.context.eventName === "issues") {
+            const iEvent = github.context.payload as IssuesEvent;
+
+            // They attempted to close the issue, so we need to tell them a joke because they can't escape this
+            // Also reopen the issue because we're not done with them yet
         }
     } catch (error) {
         core.setFailed(error.message);
