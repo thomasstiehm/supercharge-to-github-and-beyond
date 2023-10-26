@@ -32565,13 +32565,14 @@ var JokeType;
     JokeType["Error"] = "Error Joke";
 })(JokeType || (JokeType = {}));
 function run() {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e, _f;
     return __awaiter(this, void 0, void 0, function* () {
         core.debug("Starting tell-me-a-joke action");
         try {
             const token = core.getInput("token");
             const octokit = github.getOctokit(token);
-            core.info(JSON.stringify(github.context));
+            const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
+            core.debug(JSON.stringify(github.context));
             // Need to determine if the event is a workflow_dispatch event or a issues event
             if (github.context.eventName === "workflow_dispatch") {
                 const wfEvent = github.context.payload;
@@ -32583,20 +32584,43 @@ function run() {
                 });
                 // Loop through the issues returned and create a new issue that is assigned to each user asking them if they want to hear a joke
                 for (const issue of openedIssues.data) {
+                    let msg = `We like to try and keep things spicy and interesting here at Coveros.`;
+                    const labels = ["Jokes"];
+                    // `I heard you like jokes, so I made this issue to ask you if you want to hear one. If you do, just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and I'll leave you alone...`
+                    const matches = (_a = issue.body) === null || _a === void 0 ? void 0 : _a.match(favNumRegex);
+                    const isValid = /^\d+$/.test((_b = matches[1]) === null || _b === void 0 ? void 0 : _b.trim());
+                    if (isValid) {
+                        const favNum = parseInt((_c = matches[1]) === null || _c === void 0 ? void 0 : _c.trim());
+                        const wereTheyBad = favNum === 69 || favNum === 420 || favNum === 69420 || favNum === 42069;
+                        if (wereTheyBad) {
+                            // The number is within the range of unacceptable numbers, so we need to tell them an inappropriate joke
+                            msg += ` However, you were a little too spicy for us and managed to get around the checks we had in place to prevent you from being naughty. So unfortunately no jokes for you...`;
+                            // Update the labels list to include a new label that says Too Spicy
+                            labels.push("Too Spicy");
+                        }
+                        else {
+                            // The number is within the range of acceptable numbers, so we can go ahead and tell them a joke based on the number that they picked
+                            msg += ` So if you'd be interested in hearing a joke about your favorite number ${favNum}, just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and you won't hear anything more from me.`;
+                        }
+                    }
+                    else {
+                        // They ended up with a -_- for the number for whatever reason so we can interact with them in yet another different way
+                        msg += ` That's not to say that we don't also follow the rules when filling out forms. Next time be sure to follow the prompts on the form when filling in the fields :smile:`;
+                        labels.push("-_-");
+                    }
                     const newIssue = yield octokit.rest.issues.create({
                         owner: wfEvent.repository.owner.login,
                         repo: wfEvent.repository.name,
-                        title: ` ${((_a = issue.user) === null || _a === void 0 ? void 0 : _a.name) || ((_b = issue.user) === null || _b === void 0 ? void 0 : _b.login)}: Do you want to hear a joke?`,
-                        labels: ["Jokes"],
-                        assignees: [((_c = issue.user) === null || _c === void 0 ? void 0 : _c.login) || ""],
-                        body: "I heard you like jokes, so I made this issue to ask you if you want to hear one. If you do, just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and I'll leave you alone...",
+                        title: `${((_d = issue.user) === null || _d === void 0 ? void 0 : _d.name) || ((_e = issue.user) === null || _e === void 0 ? void 0 : _e.login)}: Do you want to hear a joke?`,
+                        labels: labels,
+                        assignees: [((_f = issue.user) === null || _f === void 0 ? void 0 : _f.login) || ""],
+                        body: msg,
                     });
                     core.info(JSON.stringify(newIssue));
                 }
             }
             else if (github.context.eventName === "issue_comment") {
                 const icEvent = github.context.payload;
-                // const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
                 // // Loop through the issues returned and create a new issue that is assigned to each user asking them if they want to hear a joke
                 // for (const issue of openedIssues.data) {
                 //     const matches = issue.body?.match(favNumRegex);
@@ -32612,7 +32636,6 @@ function run() {
                 //         } else {
                 //             // The number is within the range of acceptable numbers, so we can go ahead and tell them a joke based on the number that they picked
                 //         }
-                //         core.info(favNum.toString());
                 //     } else {
                 //         core.info('Invalid favorite number');
                 //         jokeToTell = JokeType.Error;
@@ -32631,6 +32654,7 @@ function run() {
                 const iEvent = github.context.payload;
                 // They attempted to close the issue, so we need to tell them a joke because they can't escape this
                 // Also reopen the issue because we're not done with them yet
+                // And even further if they were a little Too Spicy we can mess with them even more
             }
         }
         catch (error) {
