@@ -32584,7 +32584,7 @@ function run() {
                 });
                 // Loop through the issues returned and create a new issue that is assigned to each user asking them if they want to hear a joke
                 for (const issue of openedIssues.data) {
-                    let msg = `We like to try and keep things spicy and interesting here at Coveros.`;
+                    let msg = `We like to try and keep things spicy and unusual here at Coveros.`;
                     const labels = ["Jokes"];
                     // `I heard you like jokes, so I made this issue to ask you if you want to hear one. If you do, just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and I'll leave you alone...`
                     const matches = (_a = issue.body) === null || _a === void 0 ? void 0 : _a.match(favNumRegex);
@@ -32605,9 +32605,7 @@ function run() {
                     }
                     else {
                         // They ended up with a -_- for the number for whatever reason so we can interact with them in yet another different way
-                        msg += ` That's not to say that we don't also follow the rules when filling out forms. Next time be sure to follow the prompts on the form when filling in the fields :smile:.
-                    
-                    Anyways if you'd like to hear a joke anyways just comment on this issue with 'Yes' and I'll tell you a joke. If you'd rather not hear one though just go ahead and close the issue. `;
+                        msg += ` That's not to say that we don't also follow the rules when filling out forms. Next time be sure to follow the prompts on the form when filling in the fields :smile:. \n\nAnyways, if you'd still like to hear a joke just comment on this issue with 'Yes' and I'll tell you a joke. If you'd rather not hear one though just go ahead and close the issue. `;
                         labels.push("-_-");
                     }
                     const newIssue = yield octokit.rest.issues.create({
