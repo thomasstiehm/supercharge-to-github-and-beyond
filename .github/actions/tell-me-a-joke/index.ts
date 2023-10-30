@@ -9,6 +9,7 @@ enum JokeType {
     "HundredPlus" = "Please tell me a progamming joke",
     "TooSpicy" = "Please tell me a joke about what happens when you break the rules",
     "Error" = "Please tell me a joke about what happens when someone cannot follow instructions",
+    "ClosingTime" = "Please give me an inspirational saying that can motivate me to get through the day!",
 }
 
 export async function run() {
@@ -66,11 +67,11 @@ export async function run() {
             }
         } else if (github.context.eventName === "issue_comment") {
             const icEvent = github.context.payload as IssueCommentEvent;
-            let commentToMake = "";
+            let msg = "";
 
             if (icEvent.issue.labels.find((l) => l.name === "Too Spicy")) {
                 // If they are Too Spicy don't tell them a joke and instead do something else
-                commentToMake = "I can see that you would still like to hear a joke, but unfortuntately I'm not allowed to tell jokes to those who have been marked 'Too Spicy'. \n\n \n\n \n\n However, and you didn't hear this from me, if you remove one of the tags from your issue you should be able to hear a joke...";
+                msg = "I can see that you would still like to hear a joke, but unfortuntately I'm not allowed to tell jokes to those who have been marked 'Too Spicy'. \n\n \n\n \n\n However, and you didn't hear this from me, if you remove one of the tags from your issue you should be able to hear a joke...";
             } else {
                 // We want to check the content of the comment is 'Yes' or something very close to it, if so tell them a joke. If not respond back that it wasn't a valid response
                 if (icEvent.comment.body?.toLowerCase().includes("yes")) {
@@ -119,9 +120,9 @@ export async function run() {
                         { temperature: 1.0 }
                     );
                     core.debug(chatCompletions.choices[0].message?.content!);
-                    commentToMake = chatCompletions.choices[0].message?.content!;
+                    msg = chatCompletions.choices[0].message?.content!;
                 } else {
-                    commentToMake = "Dreadfully sorry, but your response doesn't appear to be yes, which means that we won't tell you a joke. \n\nIf you'd like to try again please respond with a 'Yes'";
+                    msg = "Dreadfully sorry, but your response doesn't appear to be yes, which means that we won't tell you a joke. \n\nIf you'd like to try again please respond with a 'Yes'";
                 }
             }
 
@@ -129,30 +130,29 @@ export async function run() {
                 owner: icEvent.repository.owner.login,
                 repo: icEvent.repository.name,
                 issue_number: icEvent.issue.number,
-                body: commentToMake,
+                body: msg,
             });
             core.debug(JSON.stringify(issueComment));
         } else if (github.context.eventName === "issues") {
             const iEvent = github.context.payload as IssuesEvent;
 
-            // They attempted to close the issue, so we need to tell them a joke because they can't escape this
             if (iEvent.action === "closed") {
+                // They closed the issue, and we can't just not show off that you can trigger things to happen based on that too
                 const chatCompletions = await openai.getChatCompletions(
                     "CovGPT",
                     [
                         { role: "system", content: "You are an AI assistant that helps people find information" },
-                        { role: "user", content: "Tell me a joke" },
+                        { role: "user", content: JokeType.ClosingTime },
                     ],
                     { temperature: 1.0 }
                 );
                 core.debug(chatCompletions.choices[0].message?.content!);
-                const commentToMake = chatCompletions.choices[0].message?.content!;
-
+                const msg = `I see that you have closed the issue. While I hope you were able to hear a joke before you did this just know that you're not leaving empty handed. \n\n That's because our good ol' friend ChatGPT is here with some inspirational words to help get you through the conference! \n\n ${chatCompletions.choices[0].message?.content!}`;
                 const issueComment = await octokit.rest.issues.createComment({
                     owner: iEvent.repository.owner.login,
                     repo: iEvent.repository.name,
                     issue_number: iEvent.issue.number,
-                    body: commentToMake,
+                    body: msg,
                 });
                 core.debug(JSON.stringify(issueComment));
             }

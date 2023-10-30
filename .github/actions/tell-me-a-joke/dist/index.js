@@ -41518,6 +41518,7 @@ var JokeType;
     JokeType["HundredPlus"] = "Please tell me a progamming joke";
     JokeType["TooSpicy"] = "Please tell me a joke about what happens when you break the rules";
     JokeType["Error"] = "Please tell me a joke about what happens when someone cannot follow instructions";
+    JokeType["ClosingTime"] = "Please give me an inspirational saying that can motivate me to get through the day!";
 })(JokeType || (JokeType = {}));
 function run() {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
@@ -41576,10 +41577,10 @@ function run() {
             }
             else if (github.context.eventName === "issue_comment") {
                 const icEvent = github.context.payload;
-                let commentToMake = "";
+                let msg = "";
                 if (icEvent.issue.labels.find((l) => l.name === "Too Spicy")) {
                     // If they are Too Spicy don't tell them a joke and instead do something else
-                    commentToMake = "I can see that you would still like to hear a joke, but unfortuntately I'm not allowed to tell jokes to those who have been marked 'Too Spicy'. \n\n \n\n \n\n However, and you didn't hear this from me, if you remove one of the tags from your issue you should be able to hear a joke...";
+                    msg = "I can see that you would still like to hear a joke, but unfortuntately I'm not allowed to tell jokes to those who have been marked 'Too Spicy'. \n\n \n\n \n\n However, and you didn't hear this from me, if you remove one of the tags from your issue you should be able to hear a joke...";
                 }
                 else {
                     // We want to check the content of the comment is 'Yes' or something very close to it, if so tell them a joke. If not respond back that it wasn't a valid response
@@ -41630,35 +41631,35 @@ function run() {
                             { role: "user", content: jokeToTell },
                         ], { temperature: 1.0 });
                         core.debug((_l = chatCompletions.choices[0].message) === null || _l === void 0 ? void 0 : _l.content);
-                        commentToMake = (_m = chatCompletions.choices[0].message) === null || _m === void 0 ? void 0 : _m.content;
+                        msg = (_m = chatCompletions.choices[0].message) === null || _m === void 0 ? void 0 : _m.content;
                     }
                     else {
-                        commentToMake = "Dreadfully sorry, but your response doesn't appear to be yes, which means that we won't tell you a joke. \n\nIf you'd like to try again please respond with a 'Yes'";
+                        msg = "Dreadfully sorry, but your response doesn't appear to be yes, which means that we won't tell you a joke. \n\nIf you'd like to try again please respond with a 'Yes'";
                     }
                 }
                 const issueComment = yield octokit.rest.issues.createComment({
                     owner: icEvent.repository.owner.login,
                     repo: icEvent.repository.name,
                     issue_number: icEvent.issue.number,
-                    body: commentToMake,
+                    body: msg,
                 });
                 core.debug(JSON.stringify(issueComment));
             }
             else if (github.context.eventName === "issues") {
                 const iEvent = github.context.payload;
-                // They attempted to close the issue, so we need to tell them a joke because they can't escape this
                 if (iEvent.action === "closed") {
+                    // They closed the issue, and we can't just not show off that you can trigger things to happen based on that too
                     const chatCompletions = yield openai.getChatCompletions("CovGPT", [
                         { role: "system", content: "You are an AI assistant that helps people find information" },
-                        { role: "user", content: "Tell me a joke" },
+                        { role: "user", content: JokeType.ClosingTime },
                     ], { temperature: 1.0 });
                     core.debug((_o = chatCompletions.choices[0].message) === null || _o === void 0 ? void 0 : _o.content);
-                    const commentToMake = (_p = chatCompletions.choices[0].message) === null || _p === void 0 ? void 0 : _p.content;
+                    const msg = `I see that you have closed the issue. While I hope you were able to hear a joke before you did this just know that you're not leaving empty handed. \n\n That's because our good ol' friend ChatGPT is here with some inspirational words to help get you through the conference! \n\n ${(_p = chatCompletions.choices[0].message) === null || _p === void 0 ? void 0 : _p.content}`;
                     const issueComment = yield octokit.rest.issues.createComment({
                         owner: iEvent.repository.owner.login,
                         repo: iEvent.repository.name,
                         issue_number: iEvent.issue.number,
-                        body: commentToMake,
+                        body: msg,
                     });
                     core.debug(JSON.stringify(issueComment));
                 }
