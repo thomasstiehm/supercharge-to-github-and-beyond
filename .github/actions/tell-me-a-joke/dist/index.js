@@ -41549,7 +41549,7 @@ function run() {
                         const wereTheyBad = favNum === 69 || favNum === 420 || favNum === 69420 || favNum === 42069;
                         if (wereTheyBad) {
                             // The number is within the range of unacceptable numbers, so we need to tell them an inappropriate joke
-                            msg += ` However, you were a little too spicy for us and managed to get around the checks we had in place to prevent you from being naughty. So unfortunately no jokes for you...`;
+                            msg += ` However, you were a little too spicy for us and managed to get around the checks we had in place to prevent you from being shameful. So unfortunately no jokes for you...`;
                             // Update the labels list to include a new label that says Too Spicy
                             labels.push("Too Spicy");
                         }
@@ -41591,31 +41591,37 @@ function run() {
                         else {
                             const favNumRegex = /favorite number \[(\d+)\],/;
                             const matches = (_h = icEvent.issue.body) === null || _h === void 0 ? void 0 : _h.match(favNumRegex);
-                            const isValid = /^\d+$/.test((_j = matches[1]) === null || _j === void 0 ? void 0 : _j.trim());
-                            if (isValid) {
-                                const favNum = parseInt((_k = matches[1]) === null || _k === void 0 ? void 0 : _k.trim());
-                                core.info(`Favorite number is: ${favNum}`);
-                                const wereTheyBad = favNum === 69 || favNum === 420 || favNum === 69420 || favNum === 42069;
-                                if (wereTheyBad) {
-                                    // The number is within the range of unacceptable numbers, so we need to tell them an inappropriate joke
-                                    jokeToTell = JokeType.TooSpicy;
-                                }
-                                else {
-                                    // The number is within the range of acceptable numbers, so we can go ahead and tell them a joke based on the number that they picked
-                                    if (favNum == 0) {
-                                        jokeToTell = JokeType.Zero;
-                                    }
-                                    else if (favNum > 0 && favNum < 101) {
-                                        jokeToTell = JokeType.OneHundred;
+                            if (matches && matches.length > 0) {
+                                const isValid = /^\d+$/.test((_j = matches[1]) === null || _j === void 0 ? void 0 : _j.trim());
+                                if (isValid) {
+                                    const favNum = parseInt((_k = matches[1]) === null || _k === void 0 ? void 0 : _k.trim());
+                                    core.info(`Favorite number is: ${favNum}`);
+                                    const wereTheyBad = favNum === 69 || favNum === 420 || favNum === 69420 || favNum === 42069;
+                                    if (wereTheyBad) {
+                                        // The number is within the range of unacceptable numbers, so we need to tell them an inappropriate joke
+                                        jokeToTell = JokeType.TooSpicy;
                                     }
                                     else {
-                                        jokeToTell = JokeType.HundredPlus;
+                                        // The number is within the range of acceptable numbers, so we can go ahead and tell them a joke based on the number that they picked
+                                        if (favNum == 0) {
+                                            jokeToTell = JokeType.Zero;
+                                        }
+                                        else if (favNum > 0 && favNum < 101) {
+                                            jokeToTell = JokeType.OneHundred;
+                                        }
+                                        else {
+                                            jokeToTell = JokeType.HundredPlus;
+                                        }
                                     }
+                                }
+                                else {
+                                    core.debug("Invalid favorite number");
+                                    jokeToTell = JokeType.Error;
                                 }
                             }
                             else {
-                                core.debug("Invalid favorite number");
-                                jokeToTell = JokeType.Error;
+                                // Either something broke or they messed with it so that they could have a spicy number and still get a joke, so just give them a spicy joke anyways
+                                jokeToTell = JokeType.TooSpicy;
                             }
                         }
                         // Now that we have determined what Joke to tell, add the comment telling the joke
