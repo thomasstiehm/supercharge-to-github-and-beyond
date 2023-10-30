@@ -1,25 +1,26 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import { AzureKeyCredential, OpenAIClient } from "@azure/openai";
 import { IssueCommentEvent, IssuesEvent, WorkflowDispatchEvent } from "@octokit/webhooks-definitions/schema";
 
 enum JokeType {
-    "Zero" = "Infinity Joke",
-    "One-Hundred" = "Joke 2",
-    "HundredPlus" = "Alternate Infinity Joke",
-    "Inappropriate" = "Inappropriate Joke",
-    "Error" = "Error Joke",
+    "Zero" = "Please tell me a dad joke",
+    "OneHundred" = "Please tell me a philisophical joke",
+    "HundredPlus" = "Please tell me a progamming joke",
+    "TooSpicy" = "Please tell me a joke about what happens when you break the rules",
+    "Error" = "Please tell me a joke about what happens when someone cannot follow instructions",
 }
 
 export async function run() {
     core.debug("Starting tell-me-a-joke action");
     try {
-        const token = core.getInput("token");
-        const octokit = github.getOctokit(token);
-        const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
+        const octokit = github.getOctokit(core.getInput("token"));
+        const openai = new OpenAIClient("https://coverosai.openai.azure.com/", new AzureKeyCredential(core.getInput("openai-apikey")));
 
-        core.debug(JSON.stringify(github.context));
+        // core.debug(JSON.stringify(github.context));
         // Need to determine if the event is a workflow_dispatch event or a issues event
         if (github.context.eventName === "workflow_dispatch") {
+            const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
             const wfEvent = github.context.payload as WorkflowDispatchEvent;
             // We need to grab all of the issues that are opened that have the tag 'Icebreaker' on them
             const openedIssues = await octokit.rest.issues.listForRepo({
@@ -29,7 +30,7 @@ export async function run() {
             });
             // Loop through the issues returned and create a new issue that is assigned to each user asking them if they want to hear a joke
             for (const issue of openedIssues.data) {
-                let msg = `We like to try and keep things spicy and unusual here at Coveros.`;
+                let msg = `We like to try and keep things spicy and interesting here at Coveros.`;
                 const labels = ["Jokes"];
                 // `I heard you like jokes, so I made this issue to ask you if you want to hear one. If you do, just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and I'll leave you alone...`
                 const matches = issue.body?.match(favNumRegex);
@@ -44,7 +45,7 @@ export async function run() {
                         labels.push("Too Spicy");
                     } else {
                         // The number is within the range of acceptable numbers, so we can go ahead and tell them a joke based on the number that they picked
-                        msg += ` So if you'd be interested in hearing a joke about your favorite number ${favNum}, just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and you won't hear anything more from me.`;
+                        msg += ` So if you'd be interested in hearing a joke about your favorite number [${favNum}], just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and you won't hear anything more from me.`;
                     }
                 } else {
                     // They ended up with a -_- for the number for whatever reason so we can interact with them in yet another different way
@@ -61,41 +62,71 @@ export async function run() {
                     body: msg,
                 });
 
-                core.info(JSON.stringify(newIssue));
+                core.debug(JSON.stringify(newIssue));
             }
         } else if (github.context.eventName === "issue_comment") {
             const icEvent = github.context.payload as IssueCommentEvent;
-            // // Loop through the issues returned and create a new issue that is assigned to each user asking them if they want to hear a joke
-            // If they are Too Spicy don't tell them a joke and instead do something else
-            // for (const issue of openedIssues.data) {
-            //     const matches = issue.body?.match(favNumRegex);
-            //     const isValid = /^\d+$/.test(matches![1]?.trim());
-            //     let jokeToTell: JokeType;
-            //     if (isValid) {
-            //         const favNum = parseInt(matches![1]?.trim());
-            //         core.info(`Favorite number is: ${favNum}`);
-            //         const wereTheyBad = favNum === 69 || favNum === 420 || favNum === 69420 || favNum === 42069;
-            //         if (wereTheyBad) {
-            //             // The number is within the range of unacceptable numbers, so we need to tell them an inappropriate joke
-            //             jokeToTell = JokeType.Inappropriate;
-            //         } else {
-            //             // The number is within the range of acceptable numbers, so we can go ahead and tell them a joke based on the number that they picked
-            //         }
-            //     } else {
-            //         core.info('Invalid favorite number');
-            //         jokeToTell = JokeType.Error;
-            //     }
+            let commentToMake = "";
 
-            //     // const data = await octokit.rest.issues.create({
-            //     //     owner: event.repository.owner.login,
-            //     //     repo: event.repository.name,
-            //     //     title: 'Do you want to hear a joke?',
-            //     //     assignees: [issue.user.login],
-            //     //     body: 'I heard you like jokes, so I made this issue to ask you if you want to hear one. If you do, just reply with 'Yes' and I'll tell you one. If you don't, just close this issue and I'll leave you alone.',
-            //     // });
+            if (icEvent.issue.labels.find((l) => l.name === "Too Spicy")) {
+                // If they are Too Spicy don't tell them a joke and instead do something else
+                commentToMake = "I can see that you would still like to hear a joke, but unfortuntately I'm not allowed to tell jokes to those who have been marked 'Too Spicy'. \n\n \n\n \n\n However, and you didn't hear this from me, if you remove one of the tags from your issue you should be able to hear a joke...";
+            } else {
+                // We want to check the content of the comment is 'Yes' or something very close to it, if so tell them a joke. If not respond back that it wasn't a valid response
+                if (icEvent.comment.body?.toLowerCase().includes("yes")) {
+                    let jokeToTell: JokeType;
+                    if (icEvent.issue.labels.find((l) => l.name === "-_-")) {
+                        jokeToTell = JokeType.Error;
+                    } else {
+                        const favNumRegex = /favorite number \[(\d+)\],/;
+                        const matches = icEvent.issue.body?.match(favNumRegex);
+                        const isValid = /^\d+$/.test(matches![1]?.trim());
+                        if (isValid) {
+                            const favNum = parseInt(matches![1]?.trim());
+                            core.info(`Favorite number is: ${favNum}`);
+                            const wereTheyBad = favNum === 69 || favNum === 420 || favNum === 69420 || favNum === 42069;
+                            if (wereTheyBad) {
+                                // The number is within the range of unacceptable numbers, so we need to tell them an inappropriate joke
+                                jokeToTell = JokeType.TooSpicy;
+                            } else {
+                                // The number is within the range of acceptable numbers, so we can go ahead and tell them a joke based on the number that they picked
+                                if (favNum == 0) {
+                                    jokeToTell = JokeType.Zero;
+                                } else if (favNum > 0 && favNum < 101) {
+                                    jokeToTell = JokeType.OneHundred;
+                                } else {
+                                    jokeToTell = JokeType.HundredPlus;
+                                }
+                            }
+                        } else {
+                            core.debug("Invalid favorite number");
+                            jokeToTell = JokeType.Error;
+                        }
+                    }
 
-            //     // core.info(`Created issue for user ${issue.user.login}`);
-            // }
+                    // Now that we have determined what Joke to tell, add the comment telling the joke
+                    const chatCompletions = await openai.getChatCompletions(
+                        "CovGPT",
+                        [
+                            { role: "system", content: "You are an AI assistant that helps people find information" },
+                            { role: "user", content: JokeType.OneHundred },
+                        ],
+                        { temperature: 1.0 }
+                    );
+                    core.debug(chatCompletions.choices[0].message?.content!);
+                    commentToMake = chatCompletions.choices[0].message?.content!;
+                } else {
+                    commentToMake = "Dreadfully sorry, but your response doesn't appear to be yes, which means that we won't tell you a joke. \n\nIf you'd like to try again please respond with a 'Yes'";
+                }
+            }
+
+            const issueComment = await octokit.rest.issues.createComment({
+                owner: icEvent.repository.owner.login,
+                repo: icEvent.repository.name,
+                issue_number: icEvent.issue.number,
+                body: commentToMake,
+            });
+            core.debug(JSON.stringify(issueComment));
         } else if (github.context.eventName === "issues") {
             const iEvent = github.context.payload as IssuesEvent;
 

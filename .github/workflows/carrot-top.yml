@@ -20,3 +20,4 @@ jobs:
         uses: ./.github/actions/tell-me-a-joke
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          openai-apikey: ${{ secrets.OPENAI_APIKEY }}
