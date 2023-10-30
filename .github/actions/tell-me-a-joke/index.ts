@@ -109,7 +109,7 @@ export async function run() {
                         "CovGPT",
                         [
                             { role: "system", content: "You are an AI assistant that helps people find information" },
-                            { role: "user", content: JokeType.OneHundred },
+                            { role: "user", content: jokeToTell },
                         ],
                         { temperature: 1.0 }
                     );

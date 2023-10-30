@@ -41621,7 +41621,7 @@ function run() {
                         // Now that we have determined what Joke to tell, add the comment telling the joke
                         const chatCompletions = yield openai.getChatCompletions("CovGPT", [
                             { role: "system", content: "You are an AI assistant that helps people find information" },
-                            { role: "user", content: JokeType.OneHundred },
+                            { role: "user", content: jokeToTell },
                         ], { temperature: 1.0 });
                         core.debug((_l = chatCompletions.choices[0].message) === null || _l === void 0 ? void 0 : _l.content);
                         commentToMake = (_m = chatCompletions.choices[0].message) === null || _m === void 0 ? void 0 : _m.content;
