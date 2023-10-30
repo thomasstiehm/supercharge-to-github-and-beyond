@@ -41520,13 +41520,13 @@ var JokeType;
     JokeType["Error"] = "Please tell me a joke about what happens when someone cannot follow instructions";
 })(JokeType || (JokeType = {}));
 function run() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
     return __awaiter(this, void 0, void 0, function* () {
         core.debug("Starting tell-me-a-joke action");
         try {
             const octokit = github.getOctokit(core.getInput("token"));
             const openai = new openai_1.OpenAIClient("https://coverosai.openai.azure.com/", new openai_1.AzureKeyCredential(core.getInput("openai-apikey")));
-            // core.debug(JSON.stringify(github.context));
+            core.debug(JSON.stringify(github.context));
             // Need to determine if the event is a workflow_dispatch event or a issues event
             if (github.context.eventName === "workflow_dispatch") {
                 const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
@@ -41647,8 +41647,21 @@ function run() {
             else if (github.context.eventName === "issues") {
                 const iEvent = github.context.payload;
                 // They attempted to close the issue, so we need to tell them a joke because they can't escape this
-                // Also reopen the issue because we're not done with them yet
-                // And even further if they were a little Too Spicy or -_- we can mess with them even more
+                if (iEvent.action === "closed") {
+                    const chatCompletions = yield openai.getChatCompletions("CovGPT", [
+                        { role: "system", content: "You are an AI assistant that helps people find information" },
+                        { role: "user", content: "Tell me a joke" },
+                    ], { temperature: 1.0 });
+                    core.debug((_o = chatCompletions.choices[0].message) === null || _o === void 0 ? void 0 : _o.content);
+                    const commentToMake = (_p = chatCompletions.choices[0].message) === null || _p === void 0 ? void 0 : _p.content;
+                    const issueComment = yield octokit.rest.issues.createComment({
+                        owner: iEvent.repository.owner.login,
+                        repo: iEvent.repository.name,
+                        issue_number: iEvent.issue.number,
+                        body: commentToMake,
+                    });
+                    core.debug(JSON.stringify(issueComment));
+                }
             }
         }
         catch (error) {

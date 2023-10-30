@@ -17,7 +17,7 @@ export async function run() {
         const octokit = github.getOctokit(core.getInput("token"));
         const openai = new OpenAIClient("https://coverosai.openai.azure.com/", new AzureKeyCredential(core.getInput("openai-apikey")));
 
-        // core.debug(JSON.stringify(github.context));
+        core.debug(JSON.stringify(github.context));
         // Need to determine if the event is a workflow_dispatch event or a issues event
         if (github.context.eventName === "workflow_dispatch") {
             const favNumRegex = /(?:### )?Favorite Number(?:\\n|\\s)*([^#]+)/;
@@ -136,9 +136,26 @@ export async function run() {
             const iEvent = github.context.payload as IssuesEvent;
 
             // They attempted to close the issue, so we need to tell them a joke because they can't escape this
-            // Also reopen the issue because we're not done with them yet
+            if (iEvent.action === "closed") {
+                const chatCompletions = await openai.getChatCompletions(
+                    "CovGPT",
+                    [
+                        { role: "system", content: "You are an AI assistant that helps people find information" },
+                        { role: "user", content: "Tell me a joke" },
+                    ],
+                    { temperature: 1.0 }
+                );
+                core.debug(chatCompletions.choices[0].message?.content!);
+                const commentToMake = chatCompletions.choices[0].message?.content!;
 
-            // And even further if they were a little Too Spicy or -_- we can mess with them even more
+                const issueComment = await octokit.rest.issues.createComment({
+                    owner: iEvent.repository.owner.login,
+                    repo: iEvent.repository.name,
+                    issue_number: iEvent.issue.number,
+                    body: commentToMake,
+                });
+                core.debug(JSON.stringify(issueComment));
+            }
         }
     } catch (error) {
         core.setFailed(error.message);
