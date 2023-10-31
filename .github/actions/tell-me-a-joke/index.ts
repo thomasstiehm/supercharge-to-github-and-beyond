@@ -121,7 +121,7 @@ export async function run() {
                     );
                     core.debug(chatCompletions.choices[0].message?.content!);
                     msg = chatCompletions.choices[0].message?.content!;
-                    msg += "\n\n Jokes provided by ChatGPT-3.5. (Appologies if the joke you recieved was a dud, ChatGPT has not yet mastered the art of Comedy)";
+                    msg += "\n\n Jokes provided by ChatGPT-3.5.\n\n We would also like to issue a blanket apology in the event the joke you recieved was a dud. ChatGPT has not yet mastered the art of comedy.";
                 } else {
                     msg = "Dreadfully sorry, but your response doesn't appear to be yes, which means that we won't tell you a joke. \n\nIf you'd like to try again please respond with a 'Yes'";
                 }
