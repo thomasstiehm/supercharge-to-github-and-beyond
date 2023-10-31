@@ -41632,6 +41632,7 @@ function run() {
                         ], { temperature: 1.0 });
                         core.debug((_l = chatCompletions.choices[0].message) === null || _l === void 0 ? void 0 : _l.content);
                         msg = (_m = chatCompletions.choices[0].message) === null || _m === void 0 ? void 0 : _m.content;
+                        msg += "\n\n Jokes provided by ChatGPT-3.5. (Appologies if the joke you recieved was a dud, ChatGPT has not yet mastered the art of Comedy)";
                     }
                     else {
                         msg = "Dreadfully sorry, but your response doesn't appear to be yes, which means that we won't tell you a joke. \n\nIf you'd like to try again please respond with a 'Yes'";
