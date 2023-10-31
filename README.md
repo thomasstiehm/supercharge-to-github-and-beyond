@@ -1,7 +1,9 @@
 # adoe-to-github-and-beyond
 
 This repository is for the Supercharge your Workflow: to GitHub and Beyond class being taught at ADOE 2023
-Here you will find a variety of resources to help you learn about GitHub and GitHub Enterprise. Included in this repository is the ghas bootcamp, which is a repository that is used to teach GitHub Advanced Security.
+Here you will find a variety of resources to help you learn about GitHub and GitHub Enterprise. 
+
+Included in this repository is the ghas bootcamp, which is a repository that is used to teach GitHub Advanced Security.
 
 <h1 align="center">GitHub Advanced Security Bootcamp</h1>
 <p align="center">
