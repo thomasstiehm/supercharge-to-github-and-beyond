@@ -119,6 +119,7 @@ export async function run() {
                         ],
                         { temperature: 1.0 }
                     );
+                    // If you ever want to see some really crazy responses from ChatGPT, set the tempurature to something like 1.5 or 2.0. That causes the randomness to get a little out of control some times
                     core.debug(chatCompletions.choices[0].message?.content!);
                     msg = chatCompletions.choices[0].message?.content!;
                     msg += "\n\n Jokes provided by ChatGPT-3.5.\n\n We would also like to issue a blanket apology in the event the joke you recieved was a dud. ChatGPT has not yet mastered the art of comedy.";
