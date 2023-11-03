@@ -2,7 +2,7 @@ name: ADOE 2023 Attendee Participation
 description: Teaches you about GitHub issues and forms + enables your participation in the later labs
 title: "Please enter your name (make sure you delete all this text first)"
 labels: ["Icebreaker"]
-projects: ["Coveros/16"]
+projects: ["Coveros/1"]
 body:
   - type: markdown
     attributes:
@@ -10,7 +10,7 @@ body:
         Get a feel for how issue creation can work! Whether it be using default issues, issue creation through projects, or using issue forms (fun fact: that's what this is) GitHub has options to suit your needs.
 
         Once you have filled out the form there will be some additional fields to answer linked to the project.
-        
+
         Another fun fact: You'll see some interesting things later on based on your answers here...
   - type: textarea
     id: learning-objective
