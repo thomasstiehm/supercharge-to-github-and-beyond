@@ -13,11 +13,11 @@ name: "CodeQL"
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main"]
   workflow_dispatch:
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: ["main"]
+    branches: [ "main" ]
   #schedule:
   #  - cron: '39 9 * * 6'
 
@@ -26,18 +26,14 @@ jobs:
     name: Analyze
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
-    permissions:
-      actions: write
-      contents: write
-      security-events: write
 
     strategy:
       fail-fast: false
       matrix:
-        language: ["go", "java", "javascript", "python"]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby', 'swift' ]
-        # Use only 'java' to analyze code written in Java, Kotlin or both
-        # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
+        language: [ 'go', 'java-kotlin', 'javascript-typescript', 'python' ]
+        # CodeQL supports [ 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift' ]
+        # Use only 'java-kotlin' to analyze code written in Java, Kotlin or both
+        # Use only 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
         # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
     steps:
@@ -54,15 +50,16 @@ jobs:
           # If you wish to specify custom queries, you can do so here or in a config file.
           # By default, queries listed here will override any specified in a config file.
           # Prefix the list here with "+" to use these queries and those in the config file.
-
+  
           # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
           # queries: security-extended,security-and-quality
 
+
       # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
       # If this step fails, then you should remove it and run the build manually (see below)
-
+      
       # Worst case go to GH actions market place and search "setup [lang]"
-
+      
       # Build CSharp Example
       # https://github.com/marketplace/actions/setup-net-core-sdk
       # - if: matrix.language == 'csharp'
@@ -70,21 +67,28 @@ jobs:
       #   uses: actions/setup-dotnet@v3
       #   with:
       #     dotnet-version: '3.1.x'
-
+    
       # - run: dotnet build <my project>
       # .csproj file
       # END of CSharp Example
-
+    
+    
       # Build Java
       # https://github.com/marketplace/actions/setup-java-jdk#Usage
-      - if: matrix.language == 'java'
+      - if: matrix.language == 'java-kotlin'
         name: Build Java Version 'X' (See Doc for other details)
         uses: actions/setup-java@v3
         with:
-          distribution: "microsoft" # See 'Supported distributions' for available options
-          java-version: "16"
+          distribution: 'microsoft' # See 'Supported distributions' for available options
+          java-version: '16'
       # - run: java HelloWorldApp.java
-      # End of Java Build Example
+      # End of Java Build Example 
+
+      # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
+      # If this step fails, then you should remove it and run the build manually (see below)
+      - if: matrix.language == 'java-kotlin'
+        name: Autobuild
+        uses: github/codeql-action/autobuild@v2
 
       # ℹ️ Command-line programs to run using the OS shell.
       # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
@@ -99,10 +103,12 @@ jobs:
         uses: github/codeql-action/analyze@v2
         with:
           category: "/language:${{matrix.language}}"
-          output: /results.sarif
+          # output: results
 
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          # Path to SARIF file relative to the root of the repository
-          sarif_file: results.sarif
+      # - name: Upload SARIF file
+      #   uses: github/codeql-action/upload-sarif@v2
+      #   with:
+      #     category: "/language:${{matrix.language}}"
+      #     # Path to SARIF file relative to the root of the repository
+      #     sarif_file: results
+          
