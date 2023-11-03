@@ -13,11 +13,11 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ "main"]
+    branches: ["main"]
   workflow_dispatch:
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+    branches: ["main"]
   #schedule:
   #  - cron: '39 9 * * 6'
 
@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'go', 'java', 'javascript', 'python' ]
+        language: ["go", "java", "javascript", "python"]
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby', 'swift' ]
         # Use only 'java' to analyze code written in Java, Kotlin or both
         # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
@@ -54,16 +54,15 @@ jobs:
           # If you wish to specify custom queries, you can do so here or in a config file.
           # By default, queries listed here will override any specified in a config file.
           # Prefix the list here with "+" to use these queries and those in the config file.
-  
+
           # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
           # queries: security-extended,security-and-quality
 
-
       # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
       # If this step fails, then you should remove it and run the build manually (see below)
-      
+
       # Worst case go to GH actions market place and search "setup [lang]"
-      
+
       # Build CSharp Example
       # https://github.com/marketplace/actions/setup-net-core-sdk
       # - if: matrix.language == 'csharp'
@@ -71,22 +70,21 @@ jobs:
       #   uses: actions/setup-dotnet@v3
       #   with:
       #     dotnet-version: '3.1.x'
-    
+
       # - run: dotnet build <my project>
       # .csproj file
       # END of CSharp Example
-    
-    
+
       # Build Java
       # https://github.com/marketplace/actions/setup-java-jdk#Usage
       - if: matrix.language == 'java'
         name: Build Java Version 'X' (See Doc for other details)
         uses: actions/setup-java@v3
         with:
-          distribution: 'microsoft' # See 'Supported distributions' for available options
-          java-version: '16'
+          distribution: "microsoft" # See 'Supported distributions' for available options
+          java-version: "16"
       # - run: java HelloWorldApp.java
-      # End of Java Build Example 
+      # End of Java Build Example
 
       # ℹ️ Command-line programs to run using the OS shell.
       # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
@@ -101,6 +99,7 @@ jobs:
         uses: github/codeql-action/analyze@v2
         with:
           category: "/language:${{matrix.language}}"
+          output: results.sarif
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v2
