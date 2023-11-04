@@ -25,7 +25,8 @@ permissions: write-all
 jobs:
   analyze:
     name: Analyze
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    runs-on:
+      group: conference
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
 
     strategy:
