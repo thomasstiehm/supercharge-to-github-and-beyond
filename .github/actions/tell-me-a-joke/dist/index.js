@@ -41564,6 +41564,8 @@ function run() {
                         msg += ` That's not to say that we don't also follow the rules when filling out forms. Next time be sure to follow the prompts on the form when filling in the fields :smile:. \n\nAnyways, if you'd still like to hear a joke just comment on this issue with 'Yes' and I'll tell you a joke. If you'd rather not hear one though just go ahead and close the issue. `;
                         labels.push("-_-");
                     }
+                    // let assignee = issue.user.login || "coveros-phil";
+                    core.info(JSON.stringify(issue.user));
                     const newIssue = yield octokit.rest.issues.create({
                         owner: wfEvent.repository.owner.login,
                         repo: wfEvent.repository.name,
