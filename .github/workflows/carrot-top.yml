@@ -12,8 +12,7 @@ permissions: write-all
 
 jobs:
   Jokes-Are-Fun:
-    runs-on:
-      group: conference
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.0.0
 
