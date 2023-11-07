@@ -13,8 +13,7 @@ permissions: write-all
 
 jobs:
   Change-The-Input:
-    runs-on:
-      group: conference
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.0.0
 
