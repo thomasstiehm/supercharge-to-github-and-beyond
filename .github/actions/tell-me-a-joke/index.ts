@@ -69,6 +69,10 @@ export async function run() {
             const icEvent = github.context.payload as IssueCommentEvent;
             let msg = "";
 
+            if (icEvent.issue.labels.find((l) => l.name === "Icebreaker")) {
+                return;
+            }
+
             if (icEvent.issue.labels.find((l) => l.name === "Too Spicy")) {
                 // If they are Too Spicy don't tell them a joke and instead do something else
                 msg = "I can see that you would still like to hear a joke, but unfortuntately I'm not allowed to tell jokes to those who have been marked 'Too Spicy'. \n\n \n\n \n\n However, and you didn't hear this from me, if you remove one of the tags from your issue you should be able to hear a joke...";
