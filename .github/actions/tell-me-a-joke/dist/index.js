@@ -41569,7 +41569,7 @@ function run() {
                         repo: wfEvent.repository.name,
                         title: `${((_d = issue.user) === null || _d === void 0 ? void 0 : _d.name) || ((_e = issue.user) === null || _e === void 0 ? void 0 : _e.login)}: Do you want to hear a joke?`,
                         labels: labels,
-                        assignees: [((_f = issue.user) === null || _f === void 0 ? void 0 : _f.login) || ""],
+                        assignees: [((_f = issue.user) === null || _f === void 0 ? void 0 : _f.login) || "coveros-phil"],
                         body: msg,
                     });
                     core.debug(JSON.stringify(newIssue));
@@ -41630,6 +41630,7 @@ function run() {
                             { role: "system", content: "You are an AI assistant that helps people find information" },
                             { role: "user", content: jokeToTell },
                         ], { temperature: 1.0 });
+                        // If you ever want to see some really crazy responses from ChatGPT, set the tempurature to something like 1.5 or 2.0. That causes the randomness to get a little out of control some times
                         core.debug((_l = chatCompletions.choices[0].message) === null || _l === void 0 ? void 0 : _l.content);
                         msg = (_m = chatCompletions.choices[0].message) === null || _m === void 0 ? void 0 : _m.content;
                         msg += "\n\n Jokes provided by ChatGPT-3.5.\n\n We would also like to issue a blanket apology in the event the joke you recieved was a dud. ChatGPT has not yet mastered the art of comedy.";

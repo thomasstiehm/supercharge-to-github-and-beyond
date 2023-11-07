@@ -59,7 +59,7 @@ export async function run() {
                     repo: wfEvent.repository.name,
                     title: `${issue.user?.name || issue.user?.login}: Do you want to hear a joke?`,
                     labels: labels,
-                    assignees: [issue.user?.login || ""],
+                    assignees: [issue.user?.login || "coveros-phil"],
                     body: msg,
                 });
 
